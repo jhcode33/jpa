@@ -20,10 +20,26 @@ public class Member {
     private String street;
     private String zipcode;
 
+    public Member(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    @ManyToOne
+    private Team team;
+
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<Order>();
 
     //Getter, Setter
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
+    public Team getTeam(){
+        return team;
+    }
+
     public Long getId() {
         return id;
     }
