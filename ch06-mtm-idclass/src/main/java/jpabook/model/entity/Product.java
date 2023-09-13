@@ -1,8 +1,7 @@
 package jpabook.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -10,6 +9,9 @@ public class Product {
     @Id
     @Column(name = "PRODUCT_ID")
     private String id;
+
+//    @OneToMany(mappedBy = "product")
+//    private List<MemberProduct> memberProducts;
 
     private String name;
 

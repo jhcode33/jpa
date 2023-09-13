@@ -19,14 +19,15 @@ public class Main {
 
         try {
             tx.begin(); //트랜잭션 시작
+
             //저장
-            testSave(em);
+            save(em);
 
             tx.commit(); //트랜잭션 커밋
             em.clear();
 
             //조회
-            find(em);
+            findTwoWay(em);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -38,7 +39,7 @@ public class Main {
         emf.close(); //엔티티 매니저 팩토리 종료
     }
 
-    public static void testSave(EntityManager em) {
+    public static void save(EntityManager em) {
         Member member1 = new Member("member1", "회원1");
         em.persist(member1);
 
@@ -46,8 +47,8 @@ public class Main {
         em.persist(productA);
 
         Order order = new Order();
-        order.setMember(member1);
-        order.setProduct(productA);
+        order.setMember(member1);       //연관관계 설정
+        order.setProduct(productA);     //연관관계 설정
         order.setOrderAmount(2);
         em.persist(order);
 
@@ -66,5 +67,25 @@ public class Main {
         System.out.println("Member Name: " + member.getName());
         System.out.println("Product Id: " + product.getId());
         System.out.println("Product Name: " + product.getName());
+    }
+
+    //== 양방향 조회 ==//
+    public static void findTwoWay(EntityManager em) {
+        System.out.println("======================================================");
+        // Member -> Product
+        System.out.println("### Member ###");
+        Member findMember = em.find(Member.class, "member1");
+        for (Order findMemberOrder : findMember.getListOrder()) {
+            System.out.println("Member Id: " + findMemberOrder.getMember().getId());
+            System.out.println("Member Name: " + findMemberOrder.getMember().getName());
+        }
+
+        // Product -> Member
+        System.out.println("### Product ###");
+        Product findProduct = em.find(Product.class, "productA");
+        for (Order findProductOrder : findProduct.getListOrder()) {
+            System.out.println("Product Id: " + findProductOrder.getProduct().getId());
+            System.out.println("Product Name: " + findProductOrder.getProduct().getName());
+        }
     }
 }

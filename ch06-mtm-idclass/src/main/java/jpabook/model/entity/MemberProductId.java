@@ -20,4 +20,20 @@ public class MemberProductId implements Serializable {
     public int hashCode() {
         return Objects.hash(member, product);
     }
+
+    public String getMember() {
+        return member;
+    }
+
+    public void setMember(String member) {
+        this.member = member;
+    }
+
+    public String getProduct() {
+        return product;
+    }
+
+    public void setProduct(String product) {
+        this.product = product;
+    }
 }

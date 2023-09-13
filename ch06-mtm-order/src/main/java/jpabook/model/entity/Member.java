@@ -14,7 +14,7 @@ public class Member {
     private String name;
 
     @OneToMany(mappedBy = "member")
-    private List<Order> memberProducts;
+    private List<Order> member = new ArrayList<>();
 
     public Member(){}
 
@@ -40,11 +40,11 @@ public class Member {
         this.name = name;
     }
 
-    public List<Order> getMemberProducts() {
-        return memberProducts;
+    public List<Order> getListOrder() {
+        return member;
     }
 
-    public void setMemberProducts(List<Order> memberProducts) {
-        this.memberProducts = memberProducts;
+    public void setMember(List<Order> member) {
+        this.member = member;
     }
 }

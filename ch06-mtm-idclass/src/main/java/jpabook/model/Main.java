@@ -3,6 +3,7 @@ package jpabook.model;
 
 import jpabook.model.entity.Member;
 import jpabook.model.entity.MemberProduct;
+import jpabook.model.entity.MemberProductId;
 import jpabook.model.entity.Product;
 
 import javax.persistence.*;
@@ -25,7 +26,7 @@ public class Main {
             em.clear();
 
             //조회
-            //find(em);
+            find(em);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -53,13 +54,20 @@ public class Main {
 
     }
 
-//    //== 조회 ==//
-//    public static void find(EntityManager em) {
-//        Member member = em.find(Member.class, "member1");
-//        List<Product> products = member.getProducts();
-//        for(Product product : products) {
-//            System.out.println("Product Id: " + product.getId());
-//            System.out.println("Product Name: " + product.getName());
-//        }
-//    }
+    //== 조회 ==//
+    public static void find(EntityManager em) {
+        MemberProductId memberProductId = new MemberProductId();
+        memberProductId.setMember("member1");
+        memberProductId.setProduct("productA");
+
+        MemberProduct memberProduct = em.find(MemberProduct.class, memberProductId);
+
+        Member member = memberProduct.getMember();
+        Product product = memberProduct.getProduct();
+
+        System.out.println("Member Id: " + member.getId());
+        System.out.println("Member Name: " + member.getName());
+        System.out.println("Product Id: " + product.getId());
+        System.out.println("Product Name: " + product.getName());
+    }
 }

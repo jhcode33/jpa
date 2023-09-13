@@ -3,6 +3,9 @@ package jpabook.model.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class Product {
@@ -12,6 +15,9 @@ public class Product {
     private String id;
 
     private String name;
+
+    @OneToMany(mappedBy = "product")
+    private List<Order> products = new ArrayList<>();
 
     public Product(){}
 
@@ -34,5 +40,13 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public List<Order> getListOrder() {
+        return products;
+    }
+
+    public void setProducts(List<Order> products) {
+        this.products = products;
     }
 }
