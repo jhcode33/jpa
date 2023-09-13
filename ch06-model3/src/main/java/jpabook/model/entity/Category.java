@@ -3,6 +3,7 @@ package jpabook.model.entity;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by holyeye on 2014. 3. 11..
