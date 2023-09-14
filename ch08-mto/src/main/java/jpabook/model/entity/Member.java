@@ -12,7 +12,7 @@ public class Member {
     private String name;
 
     //@ManyToOne : default EAGER
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 

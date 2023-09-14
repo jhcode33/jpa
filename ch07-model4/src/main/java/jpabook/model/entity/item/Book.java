@@ -2,6 +2,7 @@ package jpabook.model.entity.item;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 
 /**
  * Created by holyeye on 2014. 3. 11..
@@ -9,11 +10,11 @@ import javax.persistence.Entity;
 
 @Entity
 //@DiscriminatorValue("B")
+@PrimaryKeyJoinColumn(name = "BOOK_ID")
 public class Book extends Item {
 
     private String author;
     private String isbn;
-
 
     public String getAuthor() {
         return author;

@@ -17,17 +17,27 @@ public class Main {
         try {
             tx.begin(); //트랜잭션 시작
             //저장
-            Long[] ids = testSave(em);
-            Long memberId = ids[0];
-            Long team1Id = ids[1];
-            Long team2Id = ids[2];
+//            Long[] ids = testSave(em);
+//            Long memberId = ids[0];
+//            Long team1Id = ids[1];
+//            Long team2Id = ids[2];
+
+            //== cascade ==//
+            // saveWithCascade
+            Long[] ids = saveWithCascade(em);
+            Long member1Id = ids[0];
+            Long member2Id = ids[1];
+            Long team1Id = ids[2];
+
+            // removeOrphan
+            removeOrphan(em, team1Id);
 
             tx.commit();//트랜잭션 커밋
             em.clear();
 
             // Eager & Lazy Test
-            printUserAndTeam(em, memberId);
-//            printUser(em, memberId);
+            //printUserAndTeam(em, memberId);
+            //printUser(em, memberId);
 
             // Proxy Test
             //proxyTest(em, memberId);
@@ -37,6 +47,8 @@ public class Main {
 
             // Check Proxy
             //checkProxy(em, ids[0]);
+
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -102,11 +114,39 @@ public class Main {
     }
 
     public static void checkProxy(EntityManager em, Long memberId) {
-        System.out.println("========================== check Test ================================");
+        System.out.println("========================== Check Test ================================");
         Member memberProxy = em.getReference(Member.class, memberId);
 
         boolean isLoad = em.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(memberProxy);
         System.out.println("memberProxy: " + memberProxy.getClass().getName());
         System.out.println("isLoad: " + isLoad);
+    }
+
+    public static Long[] saveWithCascade(EntityManager em) {
+        System.out.println("========================== Save cascade ================================");
+        Member member1 = new Member("member1");
+        Member member2 = new Member("member2");
+
+        Team team1 = new Team("team1");
+        em.persist(team1);
+
+        member1.setTeam(team1);
+        member2.setTeam(team1);
+        team1.getMembers().add(member1);
+        team1.getMembers().add(member2);
+
+        em.persist(team1);
+
+        Long[] ids = new Long[5];
+        ids[0] = member1.getId();
+        ids[1] = member2.getId();
+        ids[2] = team1.getId();
+        return ids;
+    }
+
+    public static void removeOrphan(EntityManager em, Long team1Id) {
+        System.out.println("======================== Remove orphan ================================");
+        Team team = em.find(Team.class, team1Id);
+        team.getMembers().clear(); // = CascadeType.REMOVE
     }
 }
