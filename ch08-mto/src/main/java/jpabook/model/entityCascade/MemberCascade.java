@@ -1,9 +1,9 @@
-package jpabook.model.entity;
+package jpabook.model.entityCascade;
 
 import javax.persistence.*;
 
 @Entity
-public class Member {
+public class MemberCascade {
 
     @Id @GeneratedValue
     @Column(name = "MEMBER_ID")
@@ -13,12 +13,12 @@ public class Member {
 
     //@ManyToOne : default EAGER
     @ManyToOne
-    @JoinColumn(name = "TEAM_ID", nullable = false)
-    private Team team;
+    @JoinColumn(name = "TEAM_ID")
+    private TeamCascade teamCascade;
 
-    public Member(){}
+    public MemberCascade(){}
 
-    public Member(String name) {
+    public MemberCascade(String name) {
         this.name = name;
     }
 
@@ -39,11 +39,11 @@ public class Member {
         this.name = name;
     }
 
-    public Team getTeam() {
-        return team;
+    public TeamCascade getTeam() {
+        return teamCascade;
     }
 
-    public void setTeam(Team team) {
-        this.team = team;
+    public void setTeam(TeamCascade teamCascade) {
+        this.teamCascade = teamCascade;
     }
 }

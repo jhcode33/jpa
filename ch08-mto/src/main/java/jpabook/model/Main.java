@@ -17,38 +17,25 @@ public class Main {
         try {
             tx.begin(); //트랜잭션 시작
             //저장
-//            Long[] ids = testSave(em);
-//            Long memberId = ids[0];
-//            Long team1Id = ids[1];
-//            Long team2Id = ids[2];
-
-            //== cascade ==//
-            // saveWithCascade
-            Long[] ids = saveWithCascade(em);
-            Long member1Id = ids[0];
-            Long member2Id = ids[1];
-            Long team1Id = ids[2];
-
-            // removeOrphan
-            removeOrphan(em, team1Id);
+            Long[] ids = testSave(em);
+            Long memberId = ids[0];
+            Long team1Id = ids[1];
+            Long team2Id = ids[2];
 
             tx.commit();//트랜잭션 커밋
-            em.clear();
 
             // Eager & Lazy Test
-            //printUserAndTeam(em, memberId);
-            //printUser(em, memberId);
+            printUserAndTeam(em, memberId);
+            printUser(em, memberId);
 
             // Proxy Test
-            //proxyTest(em, memberId);
+            proxyTest(em, memberId);
 
             // Mapping Test
-            //referenceMapping(em, memberId, team2Id);
+            referenceMapping(em, memberId, team2Id);
 
             // Check Proxy
-            //checkProxy(em, ids[0]);
-
-
+            checkProxy(em, memberId);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -65,13 +52,13 @@ public class Main {
         em.persist(team1);
         // .persist()하면 영속성 컨텍스트로 관리되기 위해 식별자 ID인 시퀀스 값을 할당 받음
         // DB에 저장은 트랜잭션이 commit될 때임
-        Team team2 = new Team("team1");
+        Team team2 = new Team("team2");
         em.persist(team2);
 
         Member member1 = new Member("member1");
+        member1.setTeam(team1);          // 연관관계 설정
         em.persist(member1);
 
-        member1.setTeam(team1);          // 연관관계 설정
         Long[] result = new Long[5];
         result[0] = member1.getId();
         result[1] = team1.getId();
@@ -80,6 +67,7 @@ public class Main {
     }
 
     public static void printUserAndTeam(EntityManager em, Long id) {
+        em.clear();
         System.out.println("====================== print Member & Team ==========================");
         Member findMember = em.find(Member.class, id);
 
@@ -91,12 +79,14 @@ public class Main {
     }
 
     public static void printUser(EntityManager em, Long id) {
+        em.clear();
         System.out.println("======================== print Member ==============================");
         Member findMember = em.find(Member.class, id);
         System.out.println("Member Name: " + findMember.getName());
     }
 
     public static void proxyTest(EntityManager em, Long id) {
+        em.clear();
         System.out.println("======================== Proxy Test ================================");
         Member proxyMember = em.getReference(Member.class, id);
         System.out.println("객체 이름: " + proxyMember.getClass().getName());
@@ -107,6 +97,7 @@ public class Main {
     }
 
     public static void referenceMapping(EntityManager em, Long memberId, Long team2Id) {
+        em.clear();
         System.out.println("======================== Mapping Test ================================");
         Member getMember = em.find(Member.class, memberId);
         Team team = em.getReference(Team.class, team2Id); // SQL을 실행하지 않는다
@@ -114,39 +105,12 @@ public class Main {
     }
 
     public static void checkProxy(EntityManager em, Long memberId) {
+        em.clear();
         System.out.println("========================== Check Test ================================");
         Member memberProxy = em.getReference(Member.class, memberId);
 
         boolean isLoad = em.getEntityManagerFactory().getPersistenceUnitUtil().isLoaded(memberProxy);
         System.out.println("memberProxy: " + memberProxy.getClass().getName());
         System.out.println("isLoad: " + isLoad);
-    }
-
-    public static Long[] saveWithCascade(EntityManager em) {
-        System.out.println("========================== Save cascade ================================");
-        Member member1 = new Member("member1");
-        Member member2 = new Member("member2");
-
-        Team team1 = new Team("team1");
-        em.persist(team1);
-
-        member1.setTeam(team1);
-        member2.setTeam(team1);
-        team1.getMembers().add(member1);
-        team1.getMembers().add(member2);
-
-        em.persist(team1);
-
-        Long[] ids = new Long[5];
-        ids[0] = member1.getId();
-        ids[1] = member2.getId();
-        ids[2] = team1.getId();
-        return ids;
-    }
-
-    public static void removeOrphan(EntityManager em, Long team1Id) {
-        System.out.println("======================== Remove orphan ================================");
-        Team team = em.find(Team.class, team1Id);
-        team.getMembers().clear(); // = CascadeType.REMOVE
     }
 }
