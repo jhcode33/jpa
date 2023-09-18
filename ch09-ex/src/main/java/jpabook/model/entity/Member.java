@@ -17,6 +17,8 @@ public class Member {
 
     private String name;
 
+    private int age;
+
     @OneToMany(mappedBy = "member")
     private List<Order> orders = new ArrayList<Order>();
 
@@ -45,6 +47,14 @@ public class Member {
 
     public void setOrders(List<Order> orders) {
         this.orders = orders;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
     }
 
     public Team getTeam() {

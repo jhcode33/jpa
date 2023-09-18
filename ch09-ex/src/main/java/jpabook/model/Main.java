@@ -3,7 +3,9 @@ package jpabook.model;
 import jpabook.model.entity.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -40,6 +42,12 @@ public class Main {
             //== use Embedded ==//
             useEmbedded(em);
 
+            //== use Scalar ==//
+            useScalarType(em);
+
+            //== new UserDto ==//
+            useUserDto(em);
+
         } catch (Exception e) {
             e.printStackTrace();
             tx.rollback(); //트랜잭션 롤백
@@ -57,20 +65,23 @@ public class Main {
 
         Member member1 = new Member();
         member1.setName("member1");
+        member1.setAge(20);
         member1.setTeam(team);
         em.persist(member1);
 
         Member member2 = new Member();
         member2.setName("member2");
+        member2.setAge(30);
         member2.setTeam(team);
         em.persist(member2);
 
         Product productA = new Product();
         productA.setName("productA");
+        productA.setPrice(2000);
         em.persist(productA);
 
         Address address1 = new Address();
-        address1.setCity("Dague");
+        address1.setCity("Daegu");
         address1.setStreet("Sangin");
         address1.setZipcode("41281");
         //em.persist(address1); // Entity가 아니므로 Embedded를  사용하는 쪽에서 저장해야함.
@@ -157,6 +168,71 @@ public class Main {
         System.out.println("=============================== use Embedded ============================");
 
         List<Address> addresses =
-                em.createQuery("SELECT o.address FROM Order o", Address.class).getResultList();
+                em.createQuery("SELECT o.address FROM Order o", Address.class)
+                        .getResultList();
+
+        for (Address address : addresses) {
+            System.out.println("City: " + address.getCity());
+            System.out.println("Street: " + address.getStreet());
+            System.out.println("Zipcode: " + address.getZipcode());
+        }
+    }
+
+    public static void useScalarType(EntityManager em) {
+        em.clear();
+        System.out.println("=============================== use Scalar ============================");
+        List<String> names =
+                // 중복 제거 : SELECT DISTINCT
+                em.createQuery("SELECT name FROM Member m", String.class).getResultList();
+
+        for (String name : names) {
+            System.out.println("Member name: " + name);
+        }
+
+
+        List<Object> resultList =
+                em.createQuery("SELECT m.id, m.name FROM Member m")
+                        .getResultList();
+
+        Iterator iterator = resultList.iterator();
+        while (iterator.hasNext()) {
+            Object[] row = (Object[]) iterator.next();
+            System.out.println("id: " + (Long) row[0]);
+            System.out.println("name: " + (String) row[1]);
+        }
+
+        List<Object[]> resultObjectList =
+                em.createQuery("SELECT o.id, o.member, o.product FROM Order o")
+                    .getResultList();
+        for (Object[] row : resultObjectList) {
+            System.out.println("id: " + (Long) row[0]);         // 스칼라
+            System.out.println("Member: " + (Member) row[1]);   // 엔티티
+            System.out.println("Product: " + (Product) row[2]); // 엔티티
+        }
+    }
+
+    public static void useUserDto(EntityManager em) {
+        em.clear();
+        System.out.println("=============================== use new UserDto ============================");
+        //== new 사용 전 ==//
+        List<Object[]> resultList =
+                em.createQuery("SELECT m.name, m.age FROM Member m")
+                        .getResultList();
+
+        //객체 변환 작업
+        List<UserDto> userDTOs = new ArrayList<>();
+        for (Object[] row : resultList) {
+            UserDto userDto = new UserDto((String)row[0], (Integer)row[1]);
+            userDTOs.add(userDto);
+        }
+
+        //== new 사용 후 ==//
+        TypedQuery<UserDto> query =
+                em.createQuery("SELECT new jpabook.model.entity.UserDto(m.name, m.age) FROM Member m", UserDto.class);
+        List<UserDto> userDtoList = query.getResultList();
+        for (UserDto userDto : userDtoList) {
+            System.out.println("UserDto name: " + userDto.getName());
+            System.out.println("UserDto age: " + userDto.getAge());
+        }
     }
 }
