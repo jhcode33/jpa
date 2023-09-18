@@ -23,7 +23,9 @@ public class Main {
         try {
 
             tx.begin(); //트랜잭션 시작
-            Long[] ids = saveStub(em);
+            //== save stub ==//
+            //Long[] ids = saveStub(em);
+
             tx.commit();//트랜잭션 커밋
             em.clear();
 
