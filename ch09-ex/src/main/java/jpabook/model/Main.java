@@ -24,7 +24,7 @@ public class Main {
 
             tx.begin(); //트랜잭션 시작
             //== save stub ==//
-            //Long[] ids = saveStub(em);
+            saveStub(em);
 
             tx.commit();//트랜잭션 커밋
             em.clear();
@@ -49,6 +49,12 @@ public class Main {
 
             //== new UserDto ==//
             useUserDto(em);
+
+            //== Inner Join ==//
+            innerJoin(em);
+
+            //== Outer Join ==//
+            outerJoin(em);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -157,7 +163,7 @@ public class Main {
         // m.team이 무엇인지 이해하기
         List<Team> resultTeamList = queryTeam.getResultList();
         for (Team team : resultTeamList) {
-            System.out.println("name: " + team.getName());
+            System.out.print("name: " + team.getName());
             for (Member member : team.getMembers()) {
                 System.out.println("name: " + member.getName());
             }
@@ -174,8 +180,8 @@ public class Main {
                         .getResultList();
 
         for (Address address : addresses) {
-            System.out.println("City: " + address.getCity());
-            System.out.println("Street: " + address.getStreet());
+            System.out.print("City: " + address.getCity() + ", ");
+            System.out.print("Street: " + address.getStreet() + ", ");
             System.out.println("Zipcode: " + address.getZipcode());
         }
     }
@@ -199,7 +205,7 @@ public class Main {
         Iterator iterator = resultList.iterator();
         while (iterator.hasNext()) {
             Object[] row = (Object[]) iterator.next();
-            System.out.println("id: " + (Long) row[0]);
+            System.out.print("id: " + (Long) row[0] + ", ");
             System.out.println("name: " + (String) row[1]);
         }
 
@@ -233,8 +239,34 @@ public class Main {
                 em.createQuery("SELECT new jpabook.model.entity.UserDto(m.name, m.age) FROM Member m", UserDto.class);
         List<UserDto> userDtoList = query.getResultList();
         for (UserDto userDto : userDtoList) {
-            System.out.println("UserDto name: " + userDto.getName());
+            System.out.print("UserDto name: " + userDto.getName() + ", ");
             System.out.println("UserDto age: " + userDto.getAge());
+        }
+    }
+
+    public static void innerJoin(EntityManager em) {
+        em.clear();
+        System.out.println("=============================== use Inner Join ============================");
+        String query = "SELECT m, t FROM Member m JOIN m.team t";
+        List<Object[]> result = em.createQuery(query).getResultList();
+
+        for (Object[] row : result) {
+            Member member = (Member) row[0];
+            Team team = (Team) row[1];
+            System.out.print("Member: " + member + ", ");
+            System.out.println("Team: " + team);
+        }
+    }
+
+    public static void outerJoin(EntityManager em) {
+        em.clear();
+        System.out.println("=============================== use Outer Join ============================");
+        String query = "SELECT m FROM Member m LEFT JOIN m.team t";
+        List<Member> result = em.createQuery(query).getResultList();
+
+        for (Member member : result) {
+            System.out.print("Member: " + member + ", ");
+            System.out.println("Team: " + member.getTeam());
         }
     }
 }
