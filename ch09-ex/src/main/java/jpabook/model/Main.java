@@ -68,6 +68,8 @@ public class Main {
             //== DISTINCT Fetch Join ==//
             distinctFetchJoin(em);
 
+            //== searchLoad ==//
+            searchLoad(em);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -349,6 +351,34 @@ public class Main {
         for (Team team : result) {
             System.out.println("Team name: " + team.getName());
             System.out.println("Team members: " + team.getMembers());
+        }
+    }
+
+    public static void searchLoad(EntityManager em) {
+        em.clear();
+        System.out.println("=============================== use SearchLoad ============================");
+        System.out.println("============================== 상태 필드 경로 =============================");
+        String statusField = "SELECT m.name, m.age FROM Member m";
+        List<Object[]> statusFieldResult = em.createQuery(statusField).getResultList();
+        for (Object[] o : statusFieldResult) {
+            System.out.print("Member name: " + (String) o[0] + ", ");
+            System.out.println("Member age: " + (Integer) o[1]);
+        }
+
+        System.out.println("============================== 단일 필드 경로 =============================");
+        String oneRelationshipField = "SELECT o.member FROM Order o";
+        List<Member> oneResult = em.createQuery(oneRelationshipField, Member.class).getResultList();
+        for (Member member : oneResult) {
+            System.out.print("Member name: " + member.getName() + ", ");
+            System.out.println("Member age: " + member.getAge());
+        }
+
+        System.out.println("============================== 컬렉션 필드 경로 =============================");
+        String collectionRelationshipField = "SELECT t.members FROM Team t";
+        List<Member> collectionResult = em.createQuery(collectionRelationshipField).getResultList();
+        for (Member member : collectionResult) {
+            System.out.print("Member name: " + member.getName() + ", ");
+            System.out.println("Member age: " + member.getAge());
         }
     }
 }
