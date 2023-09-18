@@ -56,6 +56,9 @@ public class Main {
             //== Outer Join ==//
             outerJoin(em);
 
+            //== Collection Join ==//
+            collectionJoin(em);
+
         } catch (Exception e) {
             e.printStackTrace();
             tx.rollback(); //트랜잭션 롤백
@@ -170,7 +173,6 @@ public class Main {
         }
     }
 
-
     public static void useEmbedded(EntityManager em) {
         em.clear();
         System.out.println("=============================== use Embedded ============================");
@@ -267,6 +269,21 @@ public class Main {
         for (Member member : result) {
             System.out.print("Member: " + member + ", ");
             System.out.println("Team: " + member.getTeam());
+        }
+    }
+
+    public static void collectionJoin(EntityManager em) {
+        em.clear();
+        System.out.println("=============================== use Collection Join ============================");
+        String query = " SELECT t, m FROM Team t LEFT JOIN t.members m";
+        List<Object[]> result = em.createQuery(query).getResultList();
+
+        for (Object[] o : result) {
+            Team team = (Team) o[0];
+            Member member = (Member) o[1];
+
+            System.out.print("Team: " + team + ", ");
+            System.out.println("Member1: " + member + ", ");
         }
     }
 }
