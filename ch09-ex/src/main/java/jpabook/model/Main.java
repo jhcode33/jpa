@@ -2,6 +2,7 @@ package jpabook.model;
 
 import jpabook.model.entity.Address;
 import jpabook.model.entity.Member;
+import jpabook.model.entity.Order;
 import jpabook.model.entity.Team;
 
 import javax.persistence.*;
@@ -35,6 +36,9 @@ public class Main {
 
             //== use Parameters [ :"parameterName" ] ==//
             useParameters(em);
+
+            //== use Entity Projection ==//
+            useEntityProjection(em);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -88,6 +92,7 @@ public class Main {
 
     public static void useParameters(EntityManager em) {
         System.out.println("=============================== use Parameters ============================");
+        em.clear();
         String memberName = "member1";
 
         TypedQuery<Member> query =
@@ -108,4 +113,26 @@ public class Main {
             System.out.println("name: " + member.getName());
         }
     }
+
+    public static void useEntityProjection(EntityManager em) {
+        System.out.println("=============================== use EntityProjection ============================");
+        em.clear();
+
+        System.out.println("=============================== result Team =============================");
+        TypedQuery<Team> queryTeam =
+                em.createQuery("SELECT m.team From Member m", Team.class);
+
+        List<Team> resultTeamList = queryTeam.getResultList();
+        for (Team team : resultTeamList) {
+            System.out.println("id: " + team.getId());
+            System.out.println("name: " + team.getName());
+        }
+    }
+
+
+//    public static void useEmbedded(EntityManager em) {
+//        System.out.println("=============================== use Embedded ============================");
+//        Order order = new Order();
+//        order.set
+//    }
 }
