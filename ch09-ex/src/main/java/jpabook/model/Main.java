@@ -59,6 +59,16 @@ public class Main {
             //== Collection Join ==//
             collectionJoin(em);
 
+            //== Fetch Join ==//
+            fetchJoin(em);
+
+            //== Collection Fetch Join ==//
+            collectionFetchJoin(em);
+
+            //== DISTINCT Fetch Join ==//
+            distinctFetchJoin(em);
+
+
         } catch (Exception e) {
             e.printStackTrace();
             tx.rollback(); //트랜잭션 롤백
@@ -70,21 +80,31 @@ public class Main {
     }
     public static Long[] saveStub(EntityManager em) {
         System.out.println("============================== save stub ==========================");
-        Team team = new Team();
-        team.setName("team");
-        em.persist(team);
+        Team team1 = new Team();
+        team1.setName("team1");
+        em.persist(team1);
+
+        Team team2 = new Team();
+        team2.setName("team2");
+        em.persist(team2);
 
         Member member1 = new Member();
         member1.setName("member1");
         member1.setAge(20);
-        member1.setTeam(team);
+        member1.setTeam(team1);
         em.persist(member1);
 
         Member member2 = new Member();
         member2.setName("member2");
         member2.setAge(30);
-        member2.setTeam(team);
+        member2.setTeam(team1);
         em.persist(member2);
+
+        Member member3 = new Member();
+        member3.setName("member3");
+        member3.setAge(40);
+        member3.setTeam(team2);
+        em.persist(member3);
 
         Product productA = new Product();
         productA.setName("productA");
@@ -284,6 +304,51 @@ public class Main {
 
             System.out.print("Team: " + team + ", ");
             System.out.println("Member1: " + member + ", ");
+        }
+    }
+
+    public static void fetchJoin(EntityManager em) {
+        em.clear();
+        System.out.println("=============================== use Fetch Join ============================");
+        //String query = "SELECT m FROM Member m";
+        String fetchQuery = "SELECT m FROM Member m JOIN FETCH m.team";
+
+        List<Member> result = em.createQuery(fetchQuery).getResultList();
+
+        for (Member member : result) {
+            System.out.println("Member name: " + member.getName());
+            System.out.println("Member team: " + member.getTeam());
+        }
+    }
+
+    public static void collectionFetchJoin(EntityManager em) {
+        em.clear();
+        System.out.println("=============================== use Collection Fetch Join ============================");
+        //String query = "SELECT t FROM Team t WHERE t.name = :name";
+        String fetchQuery = "SELECT t FROM Team t JOIN FETCH t.members WHERE t.name = :name";
+
+        List<Team> result = em.createQuery(fetchQuery)
+                                .setParameter("name", "team1")
+                                .getResultList();
+
+        for (Team team : result) {
+            System.out.println("Team name: " + team.getName());
+            System.out.println("Team members: " + team.getMembers());
+        }
+    }
+
+    public static void distinctFetchJoin(EntityManager em) {
+        em.clear();
+        System.out.println("=============================== use Collection Fetch Join ============================");
+        String fetchQuery = "SELECT DISTINCT t FROM Team t JOIN FETCH t.members WHERE t.name = :name";
+
+        List<Team> result = em.createQuery(fetchQuery)
+                .setParameter("name", "team1")
+                .getResultList();
+
+        for (Team team : result) {
+            System.out.println("Team name: " + team.getName());
+            System.out.println("Team members: " + team.getMembers());
         }
     }
 }
