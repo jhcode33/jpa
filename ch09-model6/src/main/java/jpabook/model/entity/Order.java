@@ -32,6 +32,10 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus status;//주문상태
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PRODUCT_ID")
+    private Product product;   // 제품
+
     //==연관관계 메서드==//
     public void setMember(Member member) {
         this.member = member;
@@ -87,6 +91,14 @@ public class Order {
 
     public void setStatus(OrderStatus status) {
         this.status = status;
+    }
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     @Override

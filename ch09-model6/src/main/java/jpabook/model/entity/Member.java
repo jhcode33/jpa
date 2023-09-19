@@ -9,6 +9,10 @@ import java.util.List;
  */
 
 @Entity
+@NamedQueries({
+        @NamedQuery(name = "Member.findByName", query = "SELECT m FROM Member m WHERE m.name = :name"),
+        @NamedQuery(name = "Member.count", query = "SELECT COUNT(m) FROM Member m")
+})
 public class Member {
 
     @Id @GeneratedValue
