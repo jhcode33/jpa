@@ -34,8 +34,11 @@ public class Main {
             save(em);
             tx.commit();//트랜잭션 커밋
 
-            useTREAT(em);
+            findParent(em);
 
+            //useTREAT(em);
+
+            useEntity(em);
         } catch (Exception e) {
             e.printStackTrace();
             tx.rollback(); //트랜잭션 롤백
@@ -44,14 +47,6 @@ public class Main {
         }
 
         emf.close(); //엔티티 매니저 팩토리 종료
-    }
-
-    public static void saveMember(EntityManager em) {
-        Member member1 = new Member();
-        member1.setName("member1");
-        member1.setAddress(new Address("Dague", "sangin", "51"));
-        member1.setWorkPeriod(new Period(new Date(), new Date()));
-        em.persist(member1);
     }
 
     public static void save(EntityManager em) {
@@ -72,6 +67,11 @@ public class Main {
         em.persist(movie);
     }
 
+    public static void findParent(EntityManager em) {
+        List<Item> resultList = em.createQuery("SELECT i FROM Item i")
+                                    .getResultList();
+    }
+
     public static void useTREAT(EntityManager em) {
         List<Item> items =
                 em.createQuery("SELECT i FROM Item i WHERE TREAT(i as Book).author = 'me' ", Item.class)
@@ -80,5 +80,18 @@ public class Main {
         for (Item i : items) {
             System.out.println("Item name: " + i.getName());
         }
+    }
+
+    public static void useEntity(EntityManager em) {
+        Member member = new Member();
+        member.setName("member1");
+        member.setAddress(new Address("Dague", "sangin", "51"));
+        member.setWorkPeriod(new Period(new Date(), new Date()));
+        em.persist(member);
+
+        String jpql = "SELECT m FROM Member m WHERE m = :member";
+        List resultList = em.createQuery(jpql)
+                .setParameter("member", member)
+                .getResultList();
     }
 }
