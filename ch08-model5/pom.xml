@@ -8,20 +8,15 @@
 	<version>1.0-SNAPSHOT</version>
 
 	<properties>
-
-		<!-- 기본 설정 -->
-		<java.version>1.6</java.version>
-		<!-- 프로젝트 코드 인코딩 설정 -->
+		<maven.compiler.source>17</maven.compiler.source>
+		<maven.compiler.target>17</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
 		<!-- JPA, 하이버네이트 버전 -->
-		<hibernate.version>4.3.10.Final</hibernate.version>
+		<hibernate.version>5.6.15.Final</hibernate.version>
 		<!-- 데이터베이스 버전 -->
-		<h2db.version>1.4.187</h2db.version>
-
+		<h2db.version>2.2.222</h2db.version>
 	</properties>
-
 
 	<dependencies>
 		<!-- JPA, 하이버네이트 -->
@@ -37,19 +32,4 @@
 			<version>${h2db.version}</version>
 		</dependency>
 	</dependencies>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
 </project>
