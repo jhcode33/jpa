@@ -26,6 +26,23 @@ public class Member {
     @JoinColumn(name = "TEAM_ID")
     private Team team;
 
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name ="city", column = @Column(name = "work_city")),
+            @AttributeOverride(name ="street", column = @Column(name = "work_street")),
+            @AttributeOverride(name ="zipcode", column = @Column(name = "work_zipcode"))
+    })
+    private Address workAddress;
+
+
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name ="city", column = @Column(name = "home_city")),
+            @AttributeOverride(name ="street", column = @Column(name = "home_street")),
+            @AttributeOverride(name ="zipcode", column = @Column(name = "home_zipcode"))
+    })
+    private Address homeAddress;
+
     public Long getId() {
         return id;
     }
@@ -65,6 +82,22 @@ public class Member {
     public void setTeam(Team team) {
         this.team = team;
         team.getMembers().add(this);
+    }
+
+    public Address getWorkAddress() {
+        return workAddress;
+    }
+
+    public void setWorkAddress(Address workAddress) {
+        this.workAddress = workAddress;
+    }
+
+    public Address getHomeAddress() {
+        return homeAddress;
+    }
+
+    public void setHomeAddress(Address homeAddress) {
+        this.homeAddress = homeAddress;
     }
 
     @Override
