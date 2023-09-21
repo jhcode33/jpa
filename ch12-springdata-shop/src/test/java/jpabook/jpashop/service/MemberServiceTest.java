@@ -1,18 +1,21 @@
 package jpabook.jpashop.service;
 
+import jpabook.jpashop.config.AppConfig;
+import jpabook.jpashop.config.WebAppConfig;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.repository.MemberRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:appConfig.xml")
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = {AppConfig.class, WebAppConfig.class})
 @Transactional
 public class MemberServiceTest {
 
@@ -30,10 +33,10 @@ public class MemberServiceTest {
         Long saveId = memberService.join(member);
 
         //Then
-        assertEquals(member, memberRepository.findOne(saveId));
+        assertEquals(member, memberRepository.findByOne(saveId));
     }
 
-    @Test(expected = IllegalStateException.class)
+    @Test
     public void 중복_회원_예외() throws Exception {
 
         //Given
@@ -45,11 +48,8 @@ public class MemberServiceTest {
 
         //When
         memberService.join(member1);
-        memberService.join(member2); //예외가 발생해야 한다.
 
         //Then
-        fail("예외가 발생해야 한다.");
+        assertThrows(IllegalStateException.class, () -> memberService.join(member2));
     }
-
-
 }

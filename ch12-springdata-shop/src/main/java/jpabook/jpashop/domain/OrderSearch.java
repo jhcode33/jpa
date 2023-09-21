@@ -1,11 +1,5 @@
 package jpabook.jpashop.domain;
 
-import org.springframework.data.jpa.domain.Specifications;
-
-import static jpabook.jpashop.domain.OrderSpec.memberNameLike;
-import static jpabook.jpashop.domain.OrderSpec.orderStatusEq;
-import static org.springframework.data.jpa.domain.Specifications.where;
-
 /**
  * Created by holyeye on 2014. 3. 15..
  */
@@ -30,9 +24,10 @@ public class OrderSearch {
         this.orderStatus = orderStatus;
     }
 
-    public Specifications<Order> toSpecification() {
-        return where(memberNameLike(memberName))
-                .and(orderStatusEq(orderStatus));
-    }
+//    public Specifications<Order> toSpecification() {
+//
+//        return where(memberNameLike(memberName))
+//                .and(orderStatusEq(orderStatus));
+//    }
 
 }
