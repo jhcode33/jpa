@@ -45,7 +45,7 @@ public class OrderRepositoryTest {
         orderSearch.setMemberName("hello");
         orderSearch.setOrderStatus(OrderStatus.ORDER);
 
-        List<Order> search = orderRepository.search(orderSearch);
+        List<Order> search = orderService.findOrders(orderSearch);
 
         //Then
         assertEquals(1, search.size());
