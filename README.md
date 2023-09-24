@@ -4,7 +4,7 @@
 <br>
 - 위 저장소는 김영한님의 JPA 프로그래밍 책을 따라가면서 학습한 공간임을 알립니다.<br>
 - 학습 환경은 2023년에 맞추어 변경하였습니다.<br>
-- 양관관계 매핑에 대해 학습할 때는 프로젝트를 모듈로 나누어 각 관계를 확습했습니다.<br>
+- 양관관계 매핑에 대해 학습할 때는 프로젝트를 모듈로 나누어 각 관계를 확습했습니다.<br><br>
 
 - 원본 github : https://github.com/holyeye/jpabook
 - jh가 정리한 블로그 : https://jhcode33.tistory.com/category/%F0%9F%8D%80Spring/%F0%9F%93%96jpa
