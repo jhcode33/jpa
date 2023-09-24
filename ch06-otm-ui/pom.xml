@@ -5,7 +5,7 @@
   <groupId>jpabook.model</groupId>
   <artifactId>ch06-otm-ui</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>Archetype - ch06-otm-ui</name>
+  <name>ch06-otm-ui</name>
 
   <properties>
     <maven.compiler.source>17</maven.compiler.source>

@@ -4,7 +4,7 @@
   <groupId>jpabook.model</groupId>
   <artifactId>ch06-oto-ud</artifactId>
   <version>1.0-SNAPSHOT</version>
-  <name>Archetype - ch06-oto-ud</name>
+  <name>ch06-oto-ud</name>
 
   <properties>
     <maven.compiler.source>17</maven.compiler.source>
