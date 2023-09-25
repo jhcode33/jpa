@@ -12,7 +12,9 @@
 
 ## ch12 -> jpabookstore
 
-- spring boot로 변경, war -> jar
+- war -> jar
+- spring boot 3.1.2
+- java 17
 - QueryDSL 제거, 기존에 QueryDSL로 사용하던 메소드들은 JPQL을 사용
 - view : jsp -> thymeleaf로 변경
 <br>
